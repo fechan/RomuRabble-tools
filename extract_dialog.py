@@ -63,7 +63,9 @@ def extract(input_video, input_srt, basename):
         rmtree(basename)
         os.mkdir(basename)
     os.chdir(f"./{basename}")
-    for index, sub in enumerate(matches):
+    lastindex = -2 #last index that was part of an ongoing discourse
+    discourse = 0
+    for sub in matches:
         start = timecode_to_seconds(sub.start, False)
         end = timecode_to_seconds(sub.end, True)
         video = VideoFileClip(input_video).subclip(start, end)
@@ -72,4 +74,12 @@ def extract(input_video, input_srt, basename):
             .set_position(("center","top"))
             .set_duration(end - start) )
         video = CompositeVideoClip([video, textoverlay])
-        video.write_videofile(f"{basename}_{index}.mp4")
+
+        content = "".join(i for i in sub.content[0] if i not in "\/:*?<>|") #sanitize for filename
+        if content == "_": content = "UNKNOWN"
+
+        if not int(sub.number) == lastindex + 1: #determines if this is part of an ongoing discourse
+            discourse += 1
+        lastindex = int(sub.number)
+        video.write_videofile(f"{basename}_discourse{discourse}_{start}_{content}.mp4")
+    os.chdir("..")
