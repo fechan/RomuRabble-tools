@@ -18,17 +18,14 @@ def dialog_match(line):
     if "in romulan" in line.lower():
         return True
 
-def timecode_to_seconds(srt_timecode, ceiling):
-    '''Converts srt timecodes to seconds. Truncates milliseconds unless ceiling is set, in which
-    case it will round up to the nearest second.'''
+def timecode_to_seconds(srt_timecode):
+    '''Converts srt timecodes to seconds.'''
     times = srt_timecode.split(':')
     hour = int(times[0])
     minute = int(times[1])
     sec = int(times[2].split(',')[0])
     millisec = int(times[2].split(',')[1])
-    if ceiling and millisec > 0:
-        sec += 1
-    return (hour*3600) + (minute*60) + sec
+    return (hour*3600) + (minute*60) + sec + (millisec/1000)
 
 def subtitle_list(input_srt):
     '''Loads SRT file as a list of Subtitle ( based on https://stackoverflow.com/a/23620587 )'''
@@ -66,8 +63,8 @@ def extract(input_video, input_srt, basename):
     lastindex = -2 #last index that was part of an ongoing discourse
     discourse = 0
     for sub in matches:
-        start = timecode_to_seconds(sub.start, False)
-        end = timecode_to_seconds(sub.end, True)
+        start = timecode_to_seconds(sub.start)
+        end = timecode_to_seconds(sub.end)
         video = VideoFileClip(input_video).subclip(start, end)
         #Overlay starting timestamp
         textoverlay = ( TextClip(str(sub.start), fontsize=70, color='white')
@@ -81,5 +78,6 @@ def extract(input_video, input_srt, basename):
         if not int(sub.number) == lastindex + 1: #determines if this is part of an ongoing discourse
             discourse += 1
         lastindex = int(sub.number)
+        video.audio.write_audiofile(f"{basename}_discourse{discourse}_{start}_{content}.mp3", fps=44100)
         video.write_videofile(f"{basename}_discourse{discourse}_{start}_{content}.mp4")
     os.chdir("..")
