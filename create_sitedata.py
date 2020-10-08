@@ -8,10 +8,12 @@ filenames = [filename.replace("\n", "") for filename in filename_file.readlines(
 filename_file.close()
 
 utterances = []
+id = 0
 for filename in filenames:
     tokens = filename.split("_")
     utterances.append(
         {
+            "id":           id,
             "season":       int(filename[1]),
             "episode":      int(filename[3]),
             "discourse":    int(tokens[1].replace("discourse", "")),
@@ -21,6 +23,7 @@ for filename in filenames:
             "meaning":      ""
         }
     )
+    id = id + 1
 
 site_data = {}
 for utterance in utterances:
