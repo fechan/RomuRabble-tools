@@ -2,3 +2,4 @@
 env
 s1*
 __pycache__
+site_data.json
