@@ -33,7 +33,7 @@ for utterance in utterances:
     else:
         site_data[episode_name] = {
             "episode_name": episode_name,
-            "utterances": []
+            "utterances": [utterance]
         }
 
 sorted_site_data = {}
