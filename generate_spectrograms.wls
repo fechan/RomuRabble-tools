@@ -3,8 +3,8 @@
 
 (* generate_spectrograms.wls takes in MP3s from audioDir and exports spectrograms to exportDir as PNGs *)
 
-audioDir="/home/compupro/Documents/development/python/romurabble-site/data/audio/"
-exportDir="/home/compupro/Documents/development/python/romurabble-site/data/spectrograms"
+audioDir="/path/to/audio/"
+exportDir="/path/to/spectrograms"
 
 SetDirectory[audioDir]
 exportSpectrogram[filename_,exportDir_]:=
