@@ -65,7 +65,7 @@ def extract(input_video, input_srt, basename):
     for sub in matches:
         start = timecode_to_seconds(sub.start)
         end = timecode_to_seconds(sub.end)
-        video = VideoFileClip(input_video).subclip(start, end)
+        video = VideoFileClip(input_video).subclip(start - 0.25, end)
         #Overlay starting timestamp
         textoverlay = ( TextClip(str(sub.start), fontsize=70, color='white')
             .set_position(("center","top"))
