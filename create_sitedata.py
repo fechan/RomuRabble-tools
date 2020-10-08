@@ -11,8 +11,9 @@ site_data = []
 for filename in filenames:
     site_data.append(
         {
-            "audio_file":       filename + ".mp3",
-            "spectrogram_file": filename + ".png"
+            "audio":        filename + ".mp3",
+            "spectrogram":  filename + ".png",
+            "meaning":      ""
         }
     )
 
